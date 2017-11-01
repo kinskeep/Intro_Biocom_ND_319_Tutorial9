@@ -37,21 +37,23 @@ def alter(p,obs):
     return nll
 
 #minimizing nll for first treatment (M124K)
-initialGuess=numpy.array([1,1,1])
+initialGuess=numpy.array([2000,300])
+alterGuess=numpy.array([2000,-55,300])
 fitNull=scipy.optimize.minimize(null,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset1)
-fitAlter=scipy.optimize.minimize(alter,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset1)
+fitAlter=scipy.optimize.minimize(alter,alterGuess,method="Nelder-Mead",options={'disp':True},args=subset1)
 print(fitNull)
 print(fitAlter)
 #likelihood ratio test chi2 for M124K
 D=2*(fitNull.fun-fitAlter.fun)
-1-scipy.stats.chi2.cdf(x=D,df=1)
 #resulting p-value M124K
-print(D)
+1-scipy.stats.chi2.cdf(x=D,df=1)
+
 
 #minimizing nll for V456D
-initialGuess=numpy.array([1,1,1])
+initialGuess=numpy.array([2000,300])
+alterGuess=numpy.array([2000,-55,300])
 fitNull=scipy.optimize.minimize(null,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset2)
-fitAlter=scipy.optimize.minimize(alter,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset2)
+fitAlter=scipy.optimize.minimize(alter,alterGuess,method="Nelder-Mead",options={'disp':True},args=subset2)
 print(fitNull)
 print(fitAlter)
 #likelihood ratio test chi2 for V456D
@@ -61,9 +63,10 @@ D=2*(fitNull.fun-fitAlter.fun)
 print(D)
 
 #minimizing nll for I213N
-initialGuess=numpy.array([1,1,1])
+initialGuess=numpy.array([2000,300])
+alterGuess=numpy.array([2000,-55,300])
 fitNull=scipy.optimize.minimize(null,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset3)
-fitAlter=scipy.optimize.minimize(alter,initialGuess,method="Nelder-Mead",options={'disp':True},args=subset3)
+fitAlter=scipy.optimize.minimize(alter,alterGuess,method="Nelder-Mead",options={'disp':True},args=subset3)
 print(fitNull)
 print(fitAlter)
 #likelihood ratio test chi2 I213N
