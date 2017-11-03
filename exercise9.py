@@ -76,18 +76,20 @@ print(D)
 
 #Question 2#
 import pandas
-import numpy
 import scipy
 from scipy.optimize import minimize
 from scipy.stats import norm
-mgrowth = open("MmarinumGrowth.csv", "r")
-def (y,S,umax,Ks):
-    sigma = y[0]
-    u = umax*S/(S+Ks)
-    nll = -1*norm(u,sigma).logpdf(S.u).sum()
+mgrowth = pandas.read_csv("MmarinumGrowth.csv")
+def monod(p,obs):
+    umax = p[0]
+    Ks = p[1]
+    sigma = p[2]
+    expected= umax*obs.S/(obs.S+Ks)
+    nll= -1*scipy.stats.norm(expected,sigma).logpdf(obs.u).sum()
     return nll
-guess=numpy.array([1,1,1])
-fit=minimize(sim,guess,method='Nelder-Mead',options={'disp': True},args=17)
+monodGuess=numpy.array([1,1,1])
+fitMonod=minimize(monod,monodGuess,method='Nelder-Mead',options={'disp': True},args=mgrowth)
+print(monod)
 #####Question 3#####
 #load packages
 import pandas
@@ -130,14 +132,22 @@ def humped(p,obs):
     return nll
 
 #parameter estimates
-###NOTE TO MATI- HUMPED FUNCTION DOESN'T WORK CURRENTLY####
 constantGuess=numpy.array([1,1])
 linearGuess=numpy.array([1,1,1])
 humpedGuess=numpy.array([200,10,-0.2,1])
 fitConstant=scipy.optimize.minimize(constant,constantGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
 fitLinear=scipy.optimize.minimize(linear,linearGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
 fitHumped=scipy.optimize.minimize(humped,humpedGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
+print(fitConstant)
+print(fitLinear)
+print(fitHumped)
+#comparison of models
+D=2*(fitConstant.fun-fitLinear.fun)
+1-scipy.stats.chi2.cdf(x=D,df=1)
 
+E=2*(fitLinear.fun-fitHumped.fun)
+1-scipy.stats.chi2.cdf(x=E,df=1)
 
-
+F=2*(fitConstant.fun-fitHumped.fun)
+1-scipy.stats.chi2.cdf(x=F,df=2)
 
