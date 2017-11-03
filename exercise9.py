@@ -75,11 +75,17 @@ D=2*(fitNull.fun-fitAlter.fun)
 print(D)
 
 #Question 2#
+#load packages
 import pandas
+import numpy
 import scipy
 from scipy.optimize import minimize
 from scipy.stats import norm
+
+#load dataset
 mgrowth = pandas.read_csv("MmarinumGrowth.csv")
+
+#define custom likelihood function
 def monod(p,obs):
     umax = p[0]
     Ks = p[1]
@@ -87,9 +93,12 @@ def monod(p,obs):
     expected= umax*obs.S/(obs.S+Ks)
     nll= -1*scipy.stats.norm(expected,sigma).logpdf(obs.u).sum()
     return nll
+
+#parameter estimates
 monodGuess=numpy.array([1,1,1])
 fitMonod=minimize(monod,monodGuess,method='Nelder-Mead',options={'disp': True},args=mgrowth)
-print(monod)
+print(fitMonod.x)
+
 #####Question 3#####
 #load packages
 import pandas
@@ -138,9 +147,9 @@ humpedGuess=numpy.array([200,10,-0.2,1])
 fitConstant=scipy.optimize.minimize(constant,constantGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
 fitLinear=scipy.optimize.minimize(linear,linearGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
 fitHumped=scipy.optimize.minimize(humped,humpedGuess,method="Nelder-Mead",options={'disp':True},args=leafy)
-print(fitConstant)
-print(fitLinear)
-print(fitHumped)
+print(fitConstant.x)
+print(fitLinear.x)
+print(fitHumped.x)
 #comparison of models
 D=2*(fitConstant.fun-fitLinear.fun)
 1-scipy.stats.chi2.cdf(x=D,df=1)
